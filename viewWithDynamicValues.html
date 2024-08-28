@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YAY! It's BOGO</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <main class="offer-container">
+        <h1>YAY! It's BOGO</h1>
+        <form id="offer-form"></form>
+        <div class="free-delivery">Free Delivery</div>
+        <div class="total">Total : <span id="total-price">$0.00 USD</span></div>
+        <button class="add-to-cart">+ Add to Cart</button>
+        <div class="powered-by">Powered by <span>Pumper</span></div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const offerForm = document.getElementById('offer-form');
+            const totalPrice = document.getElementById('total-price');
+
+            // Fetch offers from JSON file
+            fetch('offers.json')
+                .then(response => response.json())
+                .then(data => {
+                    let firstOfferLoaded = false;
+                    console.log(data);
+                    data.offers.forEach((offer) => {
+                        const offerOption = document.createElement('div');
+                        offerOption.className = `offer-option ${offer.id === 'offer3' ? 'selected-offer' : ''}`;
+                        offerOption.dataset.option = offer.id;
+
+                        const radio = document.createElement('input');
+                        radio.type = 'radio';
+                        radio.id = offer.id;
+                        radio.name = 'offer';
+                        radio.value = offer.price;
+                        if (offer.id === 'offer3') {
+                            radio.checked = true;
+                        }
+
+                        const offerTag = document.createElement('div');
+                        offerTag.className = 'offer-tag';
+                        offerTag.textContent = offer.discountTag;
+
+                        const offerDetails = document.createElement('div');
+                        offerDetails.className = 'offer-details';
+
+                        const label = document.createElement('label');
+                        label.htmlFor = offer.id;
+                        label.textContent = offer.label;
+
+                        const offerPrice = document.createElement('div');
+                        offerPrice.className = 'offer-price';
+                        offerPrice.textContent = `$${offer.price} USD`;
+
+                        offerDetails.appendChild(label);
+                        offerDetails.appendChild(offerPrice);
+
+                        offerOption.appendChild(radio);
+                        offerOption.appendChild(offerTag);
+                        offerOption.appendChild(offerDetails);
+
+                        if (offer.mostPopular) {
+                            const mostPopularSpan = document.createElement('span');
+                            mostPopularSpan.className = 'most-popular';
+                            mostPopularSpan.textContent = 'Most Popular';
+                            offerOption.appendChild(mostPopularSpan);
+                        }
+
+                        // Always create dropdown containers, but hide them for offers other than offer3
+                        offer.dropdowns.forEach(dropdown => {
+                            const dropdownContainer = document.createElement('div');
+                            dropdownContainer.className = `dropdown-container ${offer.id === 'offer3' ? '' : 'hide'}`;
+
+                            const sizeSelect = document.createElement('select');
+                            sizeSelect.name = `size${data.offers.indexOf(offer) + 1}`;
+                            dropdown.sizes.forEach(size => {
+                                const sizeOption = document.createElement('option');
+                                sizeOption.value = size;
+                                sizeOption.textContent = size;
+                                sizeSelect.appendChild(sizeOption);
+                            });
+
+                            const colorSelect = document.createElement('select');
+                            colorSelect.name = `color${data.offers.indexOf(offer) + 1}`;
+                            dropdown.colors.forEach(color => {
+                                const colorOption = document.createElement('option');
+                                colorOption.value = color;
+                                colorOption.textContent = color;
+                                colorSelect.appendChild(colorOption);
+                            });
+
+                            dropdownContainer.appendChild(sizeSelect);
+                            dropdownContainer.appendChild(colorSelect);
+                            offerDetails.appendChild(dropdownContainer);
+                        });
+
+                        // Set initial price for offer3
+                        if (offer.id === 'offer3' && !firstOfferLoaded) {
+                            totalPrice.textContent = `$${offer.price} USD`;
+                            firstOfferLoaded = true;
+                        }
+
+                        offerForm.appendChild(offerOption);
+                    });
+                });
+
+            // Handle change event
+            offerForm.addEventListener('change', function (e) {
+                if (e.target.name === 'offer') {
+                    totalPrice.textContent = `$${e.target.value} USD`;
+
+                    const offers = document.querySelectorAll('.offer-option');
+                    offers.forEach(offer => {
+                        offer.classList.remove('selected-offer');
+                        const dropdownContainers = offer.querySelectorAll('.dropdown-container');
+                        dropdownContainers.forEach(container => container.classList.add('hide'));
+                    });
+
+                    const selectedOption = e.target.closest('.offer-option');
+                    selectedOption.classList.add('selected-offer');
+
+                    // Show dropdown containers if offer1, offer2, or offer3 is selected
+                    if (['offer1', 'offer2', 'offer3'].includes(selectedOption.dataset.option)) {
+                        const dropdownContainers = selectedOption.querySelectorAll('.dropdown-container');
+                        dropdownContainers.forEach(container => container.classList.remove('hide'));
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

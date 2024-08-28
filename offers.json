@@ -1,0 +1,56 @@
+{
+    "offers": [
+      {
+        "id": "offer1",
+        "discountTag": "30% Off",
+        "label": "Buy 1 Get 2",
+        "price": "18.00",
+        "mostPopular": false,
+        "dropdowns": [
+          {
+            "sizes": ["S", "M", "L"],
+            "colors": ["Black", "White", "Red"]
+          },
+          {
+            "sizes": ["S", "M", "L"],
+            "colors": ["Black", "White", "Red"]
+          }
+        ]
+      },
+      {
+        "id": "offer2",
+        "discountTag": "30% Off",
+        "label": "Buy 2 Get 4",
+        "price": "24.00",
+        "mostPopular": true,
+        "dropdowns": [
+          {
+            "sizes": ["S", "M", "L"],
+            "colors": ["Black", "White", "Red"]
+          },
+          {
+            "sizes": ["S", "M", "L"],
+            "colors": ["Black", "White", "Red"]
+          }
+        ]
+      },
+      {
+        "id": "offer3",
+        "discountTag": "10% Off",
+        "label": "Buy 3 Get 6",
+        "price": "36.00",
+        "mostPopular": false,
+        "dropdowns": [
+          {
+            "sizes": ["S", "M", "L"],
+            "colors": ["Black", "White", "Red"]
+          },
+          {
+            "sizes": ["S", "M", "L"],
+            "colors": ["Black", "White", "Red"]
+          }
+        ]
+      }
+    ]
+  }
+  
